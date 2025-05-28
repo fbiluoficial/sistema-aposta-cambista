@@ -143,6 +143,7 @@
                             apostas = dados.apostas;
                             clientes = dados.clientes;
                             alert('Dados importados com sucesso!');
+                            salvarDados(); // Salva os dados importados
                             renderApp();
                         } else {
                             alert('Arquivo JSON inválido ou incompleto.');
@@ -209,6 +210,7 @@
                 data: new Date().toISOString().split('T')[0]
             };
             showAddAposta = false;
+            salvarDados(); // Salva após adicionar/atualizar aposta
             renderApp();
         }
 
@@ -229,6 +231,7 @@
                     }]
                 } : a
             );
+            salvarDados(); // Salva após marcar como paga
             renderApp();
         }
 
@@ -260,6 +263,7 @@
 
             pagamentoAposta = { valor: '', tipo: 'parcial' };
             showPagamentoAposta = null;
+            salvarDados(); // Salva após pagamento parcial
             renderApp();
         }
 
@@ -298,6 +302,7 @@
 
             pagamentoCliente = { valor: '', tipo: 'parcial' };
             showPagamentoCliente = null;
+            salvarDados(); // Salva após pagamento do cliente
             renderApp();
         }
 
@@ -322,6 +327,7 @@
                 return aposta;
             });
             showPagamentoCliente = null;
+            salvarDados(); // Salva após pagar dívida total do cliente
             renderApp();
         }
 
@@ -339,6 +345,7 @@
             clientes = [...clientes, novoCliente];
             novoClienteNome = '';
             showAddCliente = false;
+            salvarDados(); // Salva após adicionar cliente
             renderApp();
         }
 
@@ -353,6 +360,8 @@
                 cliente.favorito = false;
             } else {
                 if (favoritosAtuais < 5) {
+                    cliente.favorito = true;
+                } else {
                     alert('Você pode fixar no máximo 5 clientes como favoritos.');
                     return;
                 }
@@ -361,12 +370,14 @@
             const newClientes = [...clientes];
             newClientes[clienteIndex] = cliente;
             clientes = newClientes;
+            salvarDados(); // Salva após alterar favorito
             renderApp();
         }
 
         function handleDeleteBet(id) {
             apostas = apostas.filter(aposta => aposta.id !== id);
             showConfirmDeleteBet = null;
+            salvarDados(); // Salva após deletar aposta
             renderApp();
         }
 
@@ -376,6 +387,7 @@
             showConfirmDeleteClient = null;
             clienteSelecionado = null;
             activeTab = 'clientes';
+            salvarDados(); // Salva após deletar cliente
             renderApp();
         }
 
@@ -405,6 +417,7 @@
             );
             apostaEmEdicao = null;
             showEditAposta = false;
+            salvarDados(); // Salva após atualizar aposta
             renderApp();
         }
 
