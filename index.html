@@ -353,8 +353,6 @@
                 cliente.favorito = false;
             } else {
                 if (favoritosAtuais < 5) {
-                    cliente.favorito = true;
-                } else {
                     alert('Você pode fixar no máximo 5 clientes como favoritos.');
                     return;
                 }
@@ -988,7 +986,7 @@
                                         type="number"
                                         step="0.01"
                                         value="${novaAposta.valor}"
-                                        onchange="novaAposta.valor = this.value;"
+                                        onchange="novaAposta.valor = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                         placeholder="100.00"
                                     />
@@ -999,7 +997,7 @@
                                     <input
                                         type="date"
                                         value="${novaAposta.data}"
-                                        onchange="novaAposta.data = this.value;"
+                                        onchange="novaAposta.data = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                     />
                                 </div>
@@ -1055,7 +1053,7 @@
                                         type="number"
                                         step="0.01"
                                         value="${apostaEmEdicao.valor}"
-                                        onchange="apostaEmEdicao.valor = this.value;"
+                                        onchange="apostaEmEdicao.valor = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                         placeholder="100.00"
                                     />
@@ -1066,7 +1064,7 @@
                                     <input
                                         type="date"
                                         value="${apostaEmEdicao.data}"
-                                        onchange="apostaEmEdicao.data = this.value;"
+                                        onchange="apostaEmEdicao.data = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                     />
                                 </div>
@@ -1105,7 +1103,7 @@
                                         type="number"
                                         step="0.01"
                                         value="${pagamentoAposta.valor}"
-                                        onchange="pagamentoAposta.valor = this.value;"
+                                        onchange="pagamentoAposta.valor = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                         placeholder="50.00"
                                     />
@@ -1147,7 +1145,7 @@
                                         type="number"
                                         step="0.01"
                                         value="${pagamentoCliente.valor}"
-                                        onchange="pagamentoCliente.valor = this.value;"
+                                        onchange="pagamentoCliente.valor = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                         placeholder="50.00"
                                     />
@@ -1193,7 +1191,7 @@
                                     <input
                                         type="text"
                                         value="${novoClienteNome}"
-                                        onchange="novoClienteNome = this.value;"
+                                        onchange="novoClienteNome = this.value; renderApp();"
                                         class="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
                                         placeholder="Ex: Maria Souza"
                                     />
