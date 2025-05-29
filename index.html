@@ -85,6 +85,13 @@
             return clientes.find(c => c.id === id);
         }
 
+        // Função para calcular o total pendente de um cliente
+        function getDividaPendenteCliente(clienteId) {
+            return apostas
+                .filter(aposta => aposta.clienteId === clienteId && !aposta.paga)
+                .reduce((sum, aposta) => sum + (aposta.valor - (aposta.valorPago || 0)), 0);
+        }
+
         // --- Persistência de Dados ---
         function salvarDados() {
             const dados = {
@@ -839,13 +846,13 @@
                                     <p class="text-sm text-gray-600">Total de Apostas: <span class="font-bold">${apostas.filter(a => a.clienteId === clienteSelecionado.id).length}</span></p>
                                 </div>
                                 <div class="p-3 bg-orange-50 rounded-xl">
-                                    <p class="text-sm text-orange-700">Dívida Pendente: <span class="font-bold">${formatCurrency(apostas.filter(a => a.clienteId === clienteSelecionado.id && !a.paga).reduce((sum, a) => sum + (a.valor - (a.valorPago || 0)), 0))}</span></p>
+                                    <p class="text-sm text-orange-700">Dívida Pendente: <span class="font-bold">${formatCurrency(getDividaPendenteCliente(clienteSelecionado.id))}</span></p>
                                 </div>
                             </div>
 
                             <div class="flex gap-3 mb-6">
                                 <button
-                                    onclick="pagamentoCliente = { valor: ${apostas.filter(a => a.clienteId === clienteSelecionado.id && !a.paga).reduce((sum, a) => sum + (a.valor - (a.valorPago || 0)), 0).toFixed(2)}, tipo: 'total' }; showPagamentoCliente = '${clienteSelecionado.id}'; renderApp();"
+                                    onclick="pagamentoCliente = { valor: ${getDividaPendenteCliente(clienteSelecionado.id).toFixed(2)}, tipo: 'total' }; showPagamentoCliente = '${clienteSelecionado.id}'; renderApp();"
                                     class="flex-1 bg-green-500 text-white p-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
                                     Pagar Toda Dívida
@@ -916,7 +923,9 @@
                         <div class="space-y-3">
                             ${sortedClientes.length === 0 ? `
                                 <p class="text-center text-gray-500 py-8">Nenhum cliente cadastrado.</p>
-                            ` : sortedClientes.map(cliente => `
+                            ` : sortedClientes.map(cliente => {
+                                const dividaPendente = getDividaPendenteCliente(cliente.id);
+                                return `
                                 <div 
                                     class="bg-white rounded-2xl p-4 shadow-lg border border-gray-100 flex items-center justify-between"
                                 >
@@ -926,6 +935,7 @@
                                     >
                                         ${cliente.favorito ? getIconSVG('Star', 18, 'text-yellow-500 fill-yellow-500') : ''}
                                         <span class="font-semibold text-gray-800">${cliente.nome}</span>
+                                        ${dividaPendente > 0 ? `<span class="ml-2 text-sm font-bold text-orange-600">${formatCurrency(dividaPendente)}</span>` : ''}
                                     </div>
                                     <button
                                         onclick="toggleFavoritoCliente('${cliente.id}');"
@@ -937,7 +947,8 @@
                                         ${getIconSVG('Star', 18)}
                                     </button>
                                 </div>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </div>
                     `;
                 }
