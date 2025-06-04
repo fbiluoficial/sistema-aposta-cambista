@@ -5,13 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Apostas Cambista</title>
     
+    <!-- Meta tags para PWA (Progressive Web App) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Apostas Cambista">
-    <meta name="theme-color" content="#10B981"> <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR50cnHL0CpFJlbJNM9-7OrHTTOQvqk-s_MLw&usqp=CAU">
+    <meta name="theme-color" content="#10B981"> <!-- Cor principal do seu app (verde) -->
+    
+    <!-- Ícone para a tela inicial -->
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR50cnHL0CpFJlbJNM9-7OrHTTOQvqk-s_MLw&usqp=CAU">
     <link rel="apple-touch-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR50cnHL0CpFJlbJNM9-7OrHTTOQvqk-s_MLw&usqp=CAU">
     
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -33,9 +39,18 @@
 <body class="min-h-screen bg-gradient-to-br from-slate-50 to-green-50">
 
     <div id="app-root">
-        </div>
+        <!-- O conteúdo do aplicativo será renderizado aqui pelo JavaScript -->
+    </div>
 
     <script>
+        // Função auxiliar para obter a data local formatada como YYYY-MM-DD
+        function getLocalFormattedDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses são 0-indexados
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         // Variáveis de estado globais
         let apostas = [];
         let clientes = [];
@@ -55,7 +70,7 @@
         let novaAposta = {
             clienteId: '',
             valor: '',
-            data: new Date().toISOString().split('T')[0]
+            data: getLocalFormattedDate(new Date()) // Corrigido para data local
         };
 
         let pagamentoAposta = {
@@ -69,16 +84,20 @@
         };
 
         // --- Funções Utilitárias ---
+        // Aprimorada para garantir interpretação local da data
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const parts = dateString.split('-');
+            // Crie um objeto Date usando os componentes, o que ajuda a interpretá-lo como data local
+            const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+            return date.toLocaleDateString('pt-BR');
+        }
+
         function formatCurrency(amount) {
             return new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
             }).format(amount);
-        }
-
-        function formatDate(dateString) {
-            if (!dateString) return '';
-            return new Date(dateString).toLocaleDateString('pt-BR');
         }
 
         function getClienteById(id) {
@@ -214,7 +233,7 @@
             novaAposta = {
                 clienteId: '',
                 valor: '',
-                data: new Date().toISOString().split('T')[0]
+                data: getLocalFormattedDate(new Date()) // Corrigido para data local
             };
             showAddAposta = false;
             salvarDados(); // Salva após adicionar/atualizar aposta
@@ -500,7 +519,10 @@
             ontem.setDate(hoje.getDate() - 1);
             
             const apostasFiltradas = apostas.filter(aposta => {
-                const dataAposta = new Date(aposta.data);
+                const dataApostaParts = aposta.data.split('-');
+                // Crie um objeto Date usando os componentes para garantir interpretação local
+                const dataAposta = new Date(parseInt(dataApostaParts[0]), parseInt(dataApostaParts[1]) - 1, parseInt(dataApostaParts[2]));
+
                 switch(filtroData) {
                     case 'hoje': return dataAposta.toDateString() === hoje.toDateString();
                     case 'ontem': return dataAposta.toDateString() === ontem.toDateString();
